@@ -1,19 +1,12 @@
 import express from "express";
-import cors from "cors";
+import router from "./routes/routes.js";
 
 
 
 
-
-
-
-
-
-
-
-
-var express = require('express');
 var app = express();
+app.use(express.json());
+app.use("/", router);
 
 app.get('/hello', function(req, res){
    res.send("holis porfavor que me salga");
@@ -21,5 +14,6 @@ app.get('/hello', function(req, res){
 app.post('/hello', function(req, res){
    res.send("You just called the post method at '/hello'!\n");
 });
+
 
 app.listen(3000);
