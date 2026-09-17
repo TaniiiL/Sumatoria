@@ -8,7 +8,7 @@ import { registrarUsuario } from "../controllers/usuarioController.js";
 const router = Router();
 
 
-router.post("/registro/nousuario", registrarUsuario );
+router.post("/registro/usuario", registrarUsuario );
 
 
 

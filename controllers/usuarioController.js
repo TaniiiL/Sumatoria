@@ -3,3 +3,4 @@ export function  registrarUsuario(req, res) {
 
     res.send("Llego la peticion de registrar usuario")
 }
+
