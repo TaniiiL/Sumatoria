@@ -1,8 +1,10 @@
-import {db}   from "../db.js";
+import { db } from "../db.js";
 
-export async function registrarUsuario ({nombre, email, password})
-const registrarUsuario = async (req, res) => {
-    try {
-        
-    }
-}
+export const registrarUsuario = async ({ nombre, email, password }) => {
+    const resultado = await db.query(
+        `INSERT INTO usuario (nombre, email, "password") VALUES ($1, $2, $3) RETURNING *`,
+        [nombre, email, password]
+    );
+
+    return resultado.rows[0];
+};
