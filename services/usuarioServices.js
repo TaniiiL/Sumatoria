@@ -64,3 +64,18 @@ export const loginUsuario = async ({ email, password }) => {
         }
     };
 };
+
+export const obtenerPerfil = async (idUsuario) => {
+    const resultado = await db.query(
+        "SELECT id_usuario, nombre, email FROM usuario WHERE id_usuario = $1",
+        [idUsuario]
+    );
+
+    if (resultado.rows.length === 0) {
+        const error = new Error("Usuario no encontrado");
+        error.status = 404;
+        throw error;
+    }
+
+    return resultado.rows[0];
+};

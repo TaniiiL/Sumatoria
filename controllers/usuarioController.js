@@ -1,6 +1,7 @@
 import {
     registrarUsuario as registrarUsuarioService,
-    loginUsuario as loginUsuarioService
+    loginUsuario as loginUsuarioService,
+    obtenerPerfil as obtenerPerfilService
 } from "../services/usuarioServices.js";
 
 function manejarError(error, res) {
@@ -51,6 +52,16 @@ export async function loginUsuario(req, res) {
             mensaje: "Login exitoso",
             ...resultado
         });
+    } catch (error) {
+        return manejarError(error, res);
+    }
+}
+
+export async function perfilUsuario(req, res) {
+    try {
+        // req.usuario lo cargó el middleware a partir del token
+        const usuario = await obtenerPerfilService(req.usuario.id);
+        return res.status(200).json(usuario);
     } catch (error) {
         return manejarError(error, res);
     }
