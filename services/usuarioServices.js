@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { db } from "../db.js";
 
 export const registrarUsuario = async ({ nombre, email, password }) => {
@@ -26,4 +27,40 @@ export const registrarUsuario = async ({ nombre, email, password }) => {
     );
 
     return resultado.rows[0];
+};
+
+export const loginUsuario = async ({ email, password }) => {
+    // 1. Buscar al usuario por mail
+    const resultado = await db.query(
+        "SELECT id_usuario, nombre, email, password FROM usuario WHERE email = $1",
+        [email]
+    );
+    const usuario = resultado.rows[0];
+
+    // 2. Comparar la contraseña con la encriptada
+    const passwordCorrecta = usuario && await bcrypt.compare(password, usuario.password);
+
+    // Mismo mensaje si no existe el mail o si la contraseña está mal,
+    // así no se puede averiguar qué mails están registrados
+    if (!passwordCorrecta) {
+        const error = new Error("Mail o contraseña incorrectos");
+        error.status = 401;
+        throw error;
+    }
+
+    // 3. Crear el token con el id y el rol
+    const token = jwt.sign(
+        { id: usuario.id_usuario, rol: "usuario" },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+    );
+
+    return {
+        token,
+        usuario: {
+            id_usuario: usuario.id_usuario,
+            nombre: usuario.nombre,
+            email: usuario.email
+        }
+    };
 };
