@@ -3,19 +3,7 @@ import {
     loginUsuario as loginUsuarioService,
     obtenerPerfil as obtenerPerfilService
 } from "../services/usuarioServices.js";
-
-function manejarError(error, res) {
-    // Errores que lanzamos nosotros (mail repetido, login incorrecto, etc.)
-    if (error.status) {
-        return res.status(error.status).json({ mensaje: error.message });
-    }
-    // Mail repetido detectado por la base de datos
-    if (error.code === "23505") {
-        return res.status(409).json({ mensaje: "Ya existe un usuario con ese mail" });
-    }
-    console.error(error);
-    return res.status(500).json({ mensaje: "Error interno del servidor" });
-}
+   import { manejarError } from "../utils/manejarError.js";
 
 export async function registrarUsuario(req, res) {
     let { nombre, email, password } = req.body;
